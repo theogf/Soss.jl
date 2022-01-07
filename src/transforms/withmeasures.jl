@@ -5,14 +5,15 @@ get_distname(x::Symbol) = Symbol(:_, x, :_dist)
 """
     withmeasures(m::Model) -> Model
 
-julia> m = @model begin
+```@repl
+m = @model begin
     σ ~ HalfNormal()
     y ~ For(10) do j
         Normal(0,σ)
     end
 end;
 
-julia> m_dists = Soss.withmeasures(m)
+m_dists = Soss.withmeasures(m)
 @model begin
         _σ_dist = HalfNormal()
         σ ~ _σ_dist
@@ -22,25 +23,10 @@ julia> m_dists = Soss.withmeasures(m)
         y ~ _y_dist
     end
 
-julia> ydist = rand(m_dists())._y_dist
-For{GeneralizedGenerated.Closure{function = (σ, M, j;) -> begin
-    M.Normal(0, σ)
-end,Tuple{Float64,Module}},Tuple{Int64},Normal{Float64},Float64}(GeneralizedGenerated.Closure{function = (σ, M, j;) -> begin
-    M.Normal(0, σ)
-end,Tuple{Float64,Module}}((0.031328640120683524, Main)), (10,))
+ydist = rand(m_dists())._y_dist
 
-julia> rand(ydist)
-10-element Array{Float64,1}:
-  0.03454891487870426
-  0.008832782323408313
- -0.007395186925623771
- -0.030669004243492004
- -0.01728630026691135
-  0.011892877715064682
-  0.025576319363013512
- -0.029323425779917773
- -0.020502677724193594
-  0.04612690097957398
+rand(ydist)
+```
 """
 function withmeasures(m::Model)
     theModule = getmodule(m)
