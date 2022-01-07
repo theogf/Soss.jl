@@ -5,22 +5,20 @@
 
 Sample from `q`, and weight the result to behave as if the sample were taken from `p`. For example,
 
-```
-julia> p = @model begin
+```@repl
+p = @model begin
     x ~ Normal()
     y ~ Normal(x,1) |> iid(5)
 end;
 
-julia> q = @model μ,σ begin
+q = @model μ,σ begin
     x ~ Normal(μ,σ)
 end;
 
-julia> y = rand(p()).y;
+y = rand(p()).y;
 
-julia> importanceSample(p(),q(μ=0.0, σ=0.5), (y=y,))
-Weighted(-7.13971.4
-,(x = -0.12280566635062592,)
-````
+importanceSample(p(),q(μ=0.0, σ=0.5), (y=y,))
+```
 """
 function importanceSample end
 
